@@ -3,36 +3,41 @@ import styles from "./SideNav.module.css"
 import HomeIcon from '@mui/icons-material/Home';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import AudioFileIcon from '@mui/icons-material/AudioFile';
+import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import SettingsIcon from '@mui/icons-material/Settings';
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import {NavLink} from "react-router-dom";
 
 
  const navData = [
+     {
+         id: 1,
+         icon: <AudioFileIcon/>,
+         text: "Audio",
+         link: "/audio"
+     },
     {
         id: 0,
-        icon: <HomeIcon/>,
-        text: "Home",
+        icon: <FormatColorTextIcon/>,
+        text: "Text",
         link: "/"
     },
-    {
-        id: 1,
-        icon: <TravelExploreIcon/>,
-        text: "Explore",
-        link: "explore"
-    },
+
     {
         id: 2,
-        icon: <BarChartIcon/>,
-        text: "Statistics",
+        icon: <InsertPhotoIcon/>,
+        text: "Image",
         link: "statistics"
     },
-    {
-        id: 3,
-        icon: <SettingsIcon/>,
-        text: "Settings",
-        link: "settings"
-    }
+    // {
+    //     id: 3,
+    //     icon: <SettingsIcon/>,
+    //     text: "Settings",
+    //     link: "settings"
+    // }
 ]
 
 const SideNav = () => {
@@ -46,10 +51,14 @@ const SideNav = () => {
                 {open? <KeyboardDoubleArrowLeftIcon />: <KeyboardDoubleArrowRightIcon />}
             </button>
             {navData.map(item =>{
-                return <div key={item.id} className={styles.sideitem} to={item.link}>
+                return <NavLink key={item.id}
+                            className={({ isActive }) =>
+                                isActive ? styles.active : styles.sideitem
+                            }
+                            to={item.link}>
                     {item.icon}
                     <span className={styles.linkText}>{item.text}</span>
-                </div>
+                </NavLink>
             })}
         </div>
     );
