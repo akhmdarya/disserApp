@@ -1,15 +1,17 @@
 import React from 'react';
-import {Route, Routes} from "react-router-dom";
-import MainPage from "../pages/MainPage";
+import {Navigate, Route, Routes} from "react-router-dom";
+import TextPage from "../pages/TextPage";
 import SideNav from "./sidenav/SideNav";
 import AudioPage from "../pages/AudioPage";
+import ImagePage from "../pages/ImagePage";
 
 const AppRouter = () => {
 
      const routes = [
-        {path : '/', element:<MainPage/>,exact:true},
+        {path : '/text', element:<TextPage/>,exact:true},
          {path : '/audio', element:<AudioPage/>,exact:true},
-        // {path : '/posts', element:Posts,exact:true},
+        {path : '/image', element:<ImagePage/>,exact:true},
+         { path: "*", element: <Navigate replace to="/image" /> },
         // {path : '/posts/:id', element:PostIdPage,exact:true},
         // {path : '/error', element:NoMatch,exact:false}
 

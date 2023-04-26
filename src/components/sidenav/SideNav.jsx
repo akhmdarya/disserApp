@@ -23,14 +23,14 @@ import {NavLink} from "react-router-dom";
         id: 0,
         icon: <FormatColorTextIcon/>,
         text: "Text",
-        link: "/"
+        link: "/text"
     },
 
     {
         id: 2,
         icon: <InsertPhotoIcon/>,
         text: "Image",
-        link: "statistics"
+        link: "/image"
     },
     // {
     //     id: 3,
