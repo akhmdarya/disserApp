@@ -1,6 +1,7 @@
 import React from "react";
 import Textarea from "@mui/joy/Textarea";
 import Box from "@mui/material/Box";
+import Subtitle from "../texts/Subtitle";
 
 const TextField = React.forwardRef((props, ref) => {
   return <Box
@@ -13,6 +14,12 @@ const TextField = React.forwardRef((props, ref) => {
             flexWrap: "wrap",
         }}
     >
+      <div style={{
+          paddingTop:"1rem"
+      }}>
+          {" "}
+          <Subtitle>Enter your secret message</Subtitle>
+      </div>
       <textarea  rows="5" cols="33" {...props} ref={ref}   ></textarea>
     </Box>
 

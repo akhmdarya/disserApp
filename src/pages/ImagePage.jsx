@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -40,11 +40,9 @@ function a11yProps(index) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
-const fileTypes = ["JPEG", "PNG"];
+const fileTypes = ["JPEG", "PNG","JPG"];
 
 const ImagePage = () => {
-
-
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -53,16 +51,23 @@ const ImagePage = () => {
 
   const [file, setFile] = useState(null);
 
+  const [fileDecode, setFileDecode] = useState(null);
+
   const [inputData, setInputData] = useState({
     message: "",
 
-    // password2: ""
   });
 
   const handleChangeFile = (file) => {
     setFile(file);
     console.log(file);
     return file;
+  };
+
+  const handleChangeFileDecode = (fileDecode) => {
+    setFileDecode(fileDecode);
+    console.log(file);
+    return fileDecode;
   };
   const onUpdateField = (e) => {
     const nextFormState = {
@@ -73,9 +78,10 @@ const ImagePage = () => {
   };
 
   const [resp, setResp] = useState("");
+  const [respDecode, setRespDecode] = useState("");
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+  //  e.preventDefault();
     const formData = new FormData();
 
     formData.append("file_from_react", file);
@@ -109,19 +115,45 @@ const ImagePage = () => {
     UploadFile();
     UploadMessage();
   };
-    useEffect(() => {
-        setInputData({
-            message: ""
-        })
-        setFile(null)
 
-    }, [resp]);
+  const handleSubmitDecode = (e) => {
+  //  e.preventDefault();
+    const formData = new FormData();
 
+    formData.append("file_from_react_toDecode", fileDecode);
+
+    const DecodeFile = async () => {
+      await fetch(baseUrl + "/uploadDecode", {
+        method: "POST",
+        body: formData,
+      }).then((resp) => {
+        resp.json().then((data) => {
+          setRespDecode(data);
+          console.log(data);
+        });
+      });
+    };
+
+    DecodeFile();
+
+  };
+
+
+  useEffect(() => {
+    setTimeout(() => {
+
+    }, 1);
+    setInputData({
+      message: "",
+    });
+    setFile(null);
+    setFileDecode(null);
+  }, [resp,respDecode]);
 
   return (
-    <div style={{ padding: "2rem 2rem", width: "100%" }}>
+    <div style={{ padding: "2rem 2rem", width: "60%" }}>
       <div className={styles.title}>
-        <span> Encoding</span>
+        <span> Image steganography</span>
       </div>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
@@ -135,31 +167,76 @@ const ImagePage = () => {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <UploadFile
-          fileTypes={fileTypes}
-          file={file}
-          handleChangeFile={handleChangeFile}
-        />
-        <TextField
-          name="message"
-          onChange={onUpdateField}
-          value={inputData.message}
-        />
-        <div
-          style={{
-            display: "flex",
+        <div className={styles.general_container}>
+          <div className={styles.container}>
+            <div className={styles.title}>
+              <span> Encoding</span>
+            </div>
+            <UploadFile
+              fileTypes={fileTypes}
+              file={file}
+              handleChangeFile={handleChangeFile}
+            />
+            <TextField
+              name="message"
+              onChange={onUpdateField}
+              value={inputData.message}
+            />
+            <div
+              style={{
+                display: "flex",
 
-            flexDirection: "column",
-            justifyContent: "center",
-            minWidth: "338px",
-            maxWidth: "544px",
-          }}
-        >
-          <Button onClick={handleSubmit} variant="contained">
-            Encrypt
-          </Button>
+                flexDirection: "column",
+                justifyContent: "center",
+                minWidth: "238px",
+                maxWidth: "544px",
+              }}
+            >
+              <Button onClick={handleSubmit} variant="contained">
+                Encrypt
+              </Button>
+              {resp ? <span>{resp}</span> : <></>}
+            </div>
+          </div>
 
-          {resp ? <span>{resp}</span> : <></>}
+          {/*==================================================================================decode*/}
+
+
+
+
+          <div className={styles.container}>
+            <div className={styles.title}>
+              <span> Decoding</span>
+            </div>
+            <UploadFile
+                fileTypes={fileTypes}
+                file={fileDecode}
+                handleChangeFile={handleChangeFileDecode}
+            />
+
+            <div
+                style={{
+                  display: "flex",
+                  paddingTop:"2rem",
+
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  minWidth: "238px",
+                  maxWidth: "544px",
+                }}
+            >
+              <Button onClick={handleSubmitDecode} variant="contained">
+                Decrypt
+              </Button>
+
+              {/*<TextField*/}
+              {/*    name="message"*/}
+              {/*    onChange={onUpdateFieldDecode}*/}
+              {/*    value={input.message}*/}
+              {/*/>*/}
+              {respDecode ? <span>{respDecode}</span> : <></>}
+            </div>
+          </div>
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>

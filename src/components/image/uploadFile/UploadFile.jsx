@@ -33,12 +33,7 @@ const UploadFile = ({ fileTypes, file, handleChangeFile, title }) => {
         )}
       </span>
 
-      <div style={{
-          paddingTop:"1rem"
-      }}>
-        {" "}
-        <Subtitle>Enter your secret message</Subtitle>
-      </div>
+
     </div>
   );
 };
