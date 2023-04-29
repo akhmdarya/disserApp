@@ -2,14 +2,17 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-
 import styles from "../styles/AudioPage.module.css";
-import UploadFile from "../components/image/uploadFile/UploadFile";
-import TextField from "../components/textField/TextField";
+
+import ImageComponentLSB from "../components/image/ImageComponentLSB";
+import ImageComponentDCT from "../components/image/ImageComponentDCT";
 import { Button } from "@mui/material";
-import { baseUrl } from "../config/config";
+import {baseUrl} from "../config/config";
+import ImageComponentTable from "../components/image/ImageComponentTable";
+import ImageComponentModifiedLSB from "../components/image/ImageComponentModifiedLSB";
+import ImageComponentMedian from "../components/image/ImageComponentMedian";
+import ImageComponentGauss from "../components/image/ImageComponentGauss";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -40,7 +43,6 @@ function a11yProps(index) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
-const fileTypes = ["JPEG", "PNG","JPG"];
 
 const ImagePage = () => {
   const [value, setValue] = useState(0);
@@ -48,107 +50,33 @@ const ImagePage = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+const [report,setReport] = useState([{}])
+  const handleGenerate = () => {
 
-  const [file, setFile] = useState(null);
+      const DecodeFile = async () => {
+          await fetch(baseUrl + "/generateReport", {
+              method: "GET",
 
-  const [fileDecode, setFileDecode] = useState(null);
+          }).then((resp) => {
+              resp.json().then((data) => {
+                  setReport(data)
+                  setTimeout(() => {
+                  }, 0);
 
-  const [inputData, setInputData] = useState({
-    message: "",
+                  console.log(report);
+                  return report
+              });
+          });
+      };
 
-  });
+      DecodeFile();
 
-  const handleChangeFile = (file) => {
-    setFile(file);
-    console.log(file);
-    return file;
-  };
 
-  const handleChangeFileDecode = (fileDecode) => {
-    setFileDecode(fileDecode);
-    console.log(file);
-    return fileDecode;
-  };
-  const onUpdateField = (e) => {
-    const nextFormState = {
-      ...inputData,
-      [e.target.name]: e.target.value,
-    };
-    setInputData(nextFormState);
-  };
 
-  const [resp, setResp] = useState("");
-  const [respDecode, setRespDecode] = useState("");
-
-  const handleSubmit = (e) => {
-  //  e.preventDefault();
-    const formData = new FormData();
-
-    formData.append("file_from_react", file);
-
-    const UploadFile = async () => {
-      await fetch(baseUrl + "/upload", {
-        method: "POST",
-        body: formData,
-      }).then((resp) => {
-        resp.json().then((data) => {
-          setResp(data);
-          console.log(data);
-        });
-      });
-    };
-    const UploadMessage = async () => {
-      await fetch(baseUrl + "/uploadMessage", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify(inputData.message),
-      }).then((resp) => {
-        resp.json().then((data) => {
-          setResp(data);
-          console.log(data);
-        });
-      });
-    };
-    UploadFile();
-    UploadMessage();
-  };
-
-  const handleSubmitDecode = (e) => {
-  //  e.preventDefault();
-    const formData = new FormData();
-
-    formData.append("file_from_react_toDecode", fileDecode);
-
-    const DecodeFile = async () => {
-      await fetch(baseUrl + "/uploadDecode", {
-        method: "POST",
-        body: formData,
-      }).then((resp) => {
-        resp.json().then((data) => {
-          setRespDecode(data);
-          console.log(data);
-        });
-      });
-    };
-
-    DecodeFile();
 
   };
 
 
-  useEffect(() => {
-    setTimeout(() => {
-
-    }, 1);
-    setInputData({
-      message: "",
-    });
-    setFile(null);
-    setFileDecode(null);
-  }, [resp,respDecode]);
 
   return (
     <div style={{ padding: "2rem 2rem", width: "60%" }}>
@@ -163,85 +91,44 @@ const ImagePage = () => {
         >
           <Tab label="LSB" {...a11yProps(0)} />
           <Tab label="DCT" {...a11yProps(1)} />
-          {/*<Tab label="Item Three" {...a11yProps(2)} />*/}
+          <Tab label="Impoved LSB + AES" {...a11yProps(2)} />
+            <Tab label="LSB + Median Filtering" {...a11yProps(3)} />
+            <Tab label="LSB + Gauss Filtering" {...a11yProps(4)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <div className={styles.general_container}>
-          <div className={styles.container}>
-            <div className={styles.title}>
-              <span> Encoding</span>
-            </div>
-            <UploadFile
-              fileTypes={fileTypes}
-              file={file}
-              handleChangeFile={handleChangeFile}
-            />
-            <TextField
-              name="message"
-              onChange={onUpdateField}
-              value={inputData.message}
-            />
-            <div
-              style={{
-                display: "flex",
-
-                flexDirection: "column",
-                justifyContent: "center",
-                minWidth: "238px",
-                maxWidth: "544px",
-              }}
-            >
-              <Button onClick={handleSubmit} variant="contained">
-                Encrypt
-              </Button>
-              {resp ? <span>{resp}</span> : <></>}
-            </div>
-          </div>
-
-          {/*==================================================================================decode*/}
-
-
-
-
-          <div className={styles.container}>
-            <div className={styles.title}>
-              <span> Decoding</span>
-            </div>
-            <UploadFile
-                fileTypes={fileTypes}
-                file={fileDecode}
-                handleChangeFile={handleChangeFileDecode}
-            />
-
-            <div
-                style={{
-                  display: "flex",
-                  paddingTop:"2rem",
-
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  minWidth: "238px",
-                  maxWidth: "544px",
-                }}
-            >
-              <Button onClick={handleSubmitDecode} variant="contained">
-                Decrypt
-              </Button>
-
-              {/*<TextField*/}
-              {/*    name="message"*/}
-              {/*    onChange={onUpdateFieldDecode}*/}
-              {/*    value={input.message}*/}
-              {/*/>*/}
-              {respDecode ? <span>{respDecode}</span> : <></>}
-            </div>
-          </div>
-        </div>
+        <ImageComponentLSB />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <ImageComponentDCT />
       </TabPanel>
+
+        <TabPanel value={value} index={2}>
+          <ImageComponentModifiedLSB/>
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+            <ImageComponentMedian/>
+        </TabPanel>    <TabPanel value={value} index={4}>
+        <ImageComponentGauss/>
+    </TabPanel>
+
+      <div
+      className={styles.butGen}
+      >
+        <Button onClick={handleGenerate} variant="contained">
+          Generate report
+        </Button>
+
+          {report.length>1?
+           <div  style={{paddingTop:"1rem"}} >
+           <ImageComponentTable report={report}/>
+           </div>
+          :
+           (<></>)
+          }
+
+      </div>
+
       {/*<TabPanel value={value} index={2}>*/}
       {/*    Item Three*/}
       {/*</TabPanel>*/}

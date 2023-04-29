@@ -6,7 +6,7 @@ import Subtitle from "../texts/Subtitle";
 const TextField = React.forwardRef((props, ref) => {
   return <Box
         sx={{
-            width: "34rem",
+            width: "27rem",
             py: 2,
             display: "grid",
             gap: 2,
@@ -15,12 +15,13 @@ const TextField = React.forwardRef((props, ref) => {
         }}
     >
       <div style={{
-          paddingTop:"1rem"
+          paddingTop:"1rem",
+          width: "27rem",
       }}>
           {" "}
-          <Subtitle>Enter your secret message</Subtitle>
+          <Subtitle>{props.text}</Subtitle>
       </div>
-      <textarea  rows="5" cols="33" {...props} ref={ref}   ></textarea>
+      <textarea readOnly={props.readOnly} rows="4" cols="30" {...props} ref={ref}   ></textarea>
     </Box>
 
 
