@@ -23,6 +23,7 @@ const ImageComponentTable = ({report}) => {
             <TableCell align="center">MSE</TableCell>
             <TableCell  align="center">PNSR</TableCell>
             <TableCell  align="center">Time to Encode</TableCell>
+            <TableCell  align="center">SSIM</TableCell>
 
           </TableRow>
         </TableHead>
@@ -38,6 +39,7 @@ const ImageComponentTable = ({report}) => {
               <TableCell align="center">{row.MSE}</TableCell>
               <TableCell align="center">{row.PSNR}</TableCell>
               <TableCell align="center">{row.flag}</TableCell>
+              <TableCell align="center">{row.SSIM}</TableCell>
               {/*<TableCell align="right">{row.carbs}</TableCell>*/}
               {/*<TableCell align="right">{row.protein}</TableCell>*/}
             </TableRow>
